@@ -32,9 +32,9 @@
   <meta property="og:title" content="Rutendo Layla Mucheri | Most Popular Scholarz 2025" />
   <meta property="og:description" content="Celebrating Rutendo Layla Mucheri as the Most Popular Scholarz of 2025, selected through a nationwide WhatsApp challenge. Developed by Dr BennyT at Blessing Media." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://your-site-url.com" />
-  <meta property="og:image" content="https://your-site-url.com/assets/layla-og.jpg" />
-  <meta property="og:site_name" content="Scholarz Gate" />
+  <meta property="og:url" content="https://laylawenyu.netlify.app" />
+  <meta property="og:image" content="https://laylawenyu.netlify.app/assets/logotrans.png" />
+  <meta property="og:site_name" content="Scholarz Nation" />
   <meta property="og:locale" content="en_ZW" />
 
   <!-- Twitter Card -->
@@ -102,7 +102,9 @@
     <!-- Text Content -->
     <div class="hero-text">
       <h2 class="welcome">Welcome!</h2>
-        <h3 class="intro">I'm Layla</h3>
+        <h3 class="intro">
+  I'm <span id="typewriter"></span>
+</h3>
         <p class="description">
           An ambitious student dedicated to<br>
           academics, leadership, and personal growth.<br>
@@ -329,34 +331,5 @@
   </div>
 </footer>
 <script src="script.js"></script>
-<script>
-  const toggle = document.querySelector('.menu-toggle');
-const navLinks = document.querySelector('.nav-links');
-const header = document.querySelector('.site-header');
-
-window.addEventListener('scroll', () => {
-  if (window.scrollY > 40) {
-    header.classList.add('scrolled');
-  } else {
-    header.classList.remove('scrolled');
-  }
-});
-toggle.addEventListener('click', () => {
-  navLinks.classList.toggle('open');
-});
-  const menu = document.querySelector(".nav-menu");
-
-  toggle.addEventListener("click", () => {
-    toggle.classList.toggle("active");
-    menu.classList.toggle("open");
-  });
-
-  links.forEach(link => {
-    link.addEventListener("click", () => {
-      menu.classList.remove("open");
-      toggle.classList.remove("active");
-    });
-  });
-</script>
 </body>
-</html>
+    </html>
