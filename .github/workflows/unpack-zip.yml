@@ -1,0 +1,85 @@
+ url=https://github.com/docbennyt/Layla-Portfolio/blob/main/.github/workflows/unpack-zip.yml
+permissions:
+  contents: write
+
+on:
+  push:
+    paths:
+      - 'Layla Portfolio.zip'
+  workflow_dispatch: {}
+
+name: Unpack Layla Portfolio.zip
+
+concurrency:
+  group: unpack-layla-portfolio-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Ensure unzip is available
+        run: |
+          if ! command -v unzip >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y unzip
+          fi
+
+      - name: Show archive info
+        run: |
+          ZIP="Layla Portfolio.zip"
+          if [ -f "$ZIP" ]; then
+            echo "Archive size and list:"
+            ls -lh "$ZIP" || true
+            unzip -l "$ZIP" || true
+          else
+            echo "Archive $ZIP not found in workspace"
+            exit 1
+          fi
+
+      - name: Extract zip into repository root
+        run: |
+          set -euo pipefail
+          ZIP="Layla Portfolio.zip"
+          DEST="."
+          echo "Extracting $ZIP -> $DEST"
+          # -o to overwrite existing files with files from the zip
+          unzip -o "$ZIP" -d "$DEST"
+          echo "Extraction finished"
+
+      - name: Prepare commit (unstage zip & workflow file to avoid accidental commits)
+        run: |
+          # Stage everything then explicitly unstage the archive and this workflow file so they are not committed
+          git add -A
+          git reset -- "Layla Portfolio.zip" || true
+          git reset -- .github/workflows/unpack-zip.yml || true
+
+      - name: Show git status / changed files
+        run: |
+          echo "Changed files (porcelain):"
+          git status --porcelain
+          echo "Changed file list:"
+          git diff --name-only || true
+
+      - name: Commit & push changes (if any)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A
+            # ensure zip and workflow remain unstaged
+            git reset -- "Layla Portfolio.zip" || true
+            git reset -- .github/workflows/unpack-zip.yml || true
+            git commit -m "Unpack Layla Portfolio.zip via GitHub Actions"
+            git push
+          else
+            echo "No changes to commit"
+          fi
