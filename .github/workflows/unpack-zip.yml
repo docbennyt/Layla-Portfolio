@@ -1,4 +1,4 @@
- url=https://github.com/docbennyt/Layla-Portfolio/blob/main/.github/workflows/unpack-zip.yml
+name: Unpack Layla Portfolio.zip
 permissions:
   contents: write
 
@@ -7,8 +7,6 @@ on:
     paths:
       - 'Layla Portfolio.zip'
   workflow_dispatch: {}
-
-name: Unpack Layla Portfolio.zip
 
 concurrency:
   group: unpack-layla-portfolio-${{ github.ref }}
@@ -49,13 +47,11 @@ jobs:
           ZIP="Layla Portfolio.zip"
           DEST="."
           echo "Extracting $ZIP -> $DEST"
-          # -o to overwrite existing files with files from the zip
           unzip -o "$ZIP" -d "$DEST"
           echo "Extraction finished"
 
       - name: Prepare commit (unstage zip & workflow file to avoid accidental commits)
         run: |
-          # Stage everything then explicitly unstage the archive and this workflow file so they are not committed
           git add -A
           git reset -- "Layla Portfolio.zip" || true
           git reset -- .github/workflows/unpack-zip.yml || true
@@ -74,10 +70,10 @@ jobs:
           if [ -n "$(git status --porcelain)" ]; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add -A
             # ensure zip and workflow remain unstaged
             git reset -- "Layla Portfolio.zip" || true
             git reset -- .github/workflows/unpack-zip.yml || true
+            git add -A
             git commit -m "Unpack Layla Portfolio.zip via GitHub Actions"
             git push
           else
